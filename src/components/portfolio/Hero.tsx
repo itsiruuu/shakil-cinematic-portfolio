@@ -1,20 +1,26 @@
 import { useEffect, useRef, useState } from "react";
 import { ArrowDown, ArrowUpRight } from "lucide-react";
 import profile from "@/assets/shorif-profile.png.asset.json";
-import { HeroBackground } from "./HeroBackground";
+import { VideoBackground } from "./VideoBackground";
 import { MagneticButton } from "./MagneticButton";
 import { useDesktopPointer } from "@/hooks/use-reveal";
 
 const HEADLINE = ["SHORIF", "AHAMED", "SHAKIL"];
+const ROLES = ["Creative", "Graphics", "UI/UX", "Visual Brand"];
 
 export function Hero() {
   const [mounted, setMounted] = useState(false);
+  const [role, setRole] = useState(0);
   const isDesktop = useDesktopPointer();
   const photoRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
     const t = setTimeout(() => setMounted(true), 80);
-    return () => clearTimeout(t);
+    const r = setInterval(() => setRole((v) => (v + 1) % ROLES.length), 2200);
+    return () => {
+      clearTimeout(t);
+      clearInterval(r);
+    };
   }, []);
 
   useEffect(() => {
@@ -56,8 +62,8 @@ export function Hero() {
     document.getElementById(id)?.scrollIntoView({ behavior: "smooth", block: "start" });
 
   return (
-    <section id="home" className="relative min-h-svh overflow-hidden bg-paper pt-28 lg:pt-32">
-      <HeroBackground />
+    <section id="home" className="relative min-h-svh overflow-hidden bg-ink pt-32 lg:pt-36">
+      <VideoBackground overlay="from-ink/80 via-ink/75 to-ink" />
 
       <div className="relative mx-auto grid max-w-[1500px] grid-cols-1 items-center gap-12 px-5 pb-16 sm:px-8 lg:grid-cols-[1.15fr_0.85fr] lg:gap-8 lg:pb-24">
         {/* LEFT */}
@@ -69,11 +75,11 @@ export function Hero() {
               transform: mounted ? "none" : "translateY(14px)",
             }}
           >
-            <span className="h-px w-10 bg-ash" />
+            <span className="h-px w-10 bg-gradient-to-r from-neon to-electric" />
             Graphics Designer • UI/UX Designer
           </div>
 
-          <h1 className="display-hero mt-5 text-ink">
+          <h1 className="display-hero mt-5 text-paper">
             {HEADLINE.map((word, i) => (
               <span key={word} className="block overflow-hidden">
                 <span
@@ -98,8 +104,21 @@ export function Hero() {
               transform: mounted ? "none" : "translateY(24px)",
             }}
           >
-            <p className="font-display text-[clamp(1.1rem,2.1vw,1.75rem)] uppercase leading-[1.05] tracking-tight text-graphite">
-              I design digital experiences that stand out.
+            <p className="flex flex-wrap items-baseline gap-x-3 font-display text-[clamp(1.1rem,2.1vw,1.75rem)] uppercase leading-[1.05] tracking-tight text-paper">
+              A
+              <span className="relative inline-flex h-[1.15em] overflow-hidden align-bottom">
+                <span
+                  className="flex flex-col transition-transform duration-700 ease-[cubic-bezier(0.16,1,0.3,1)]"
+                  style={{ transform: `translateY(-${role * 1.15}em)` }}
+                >
+                  {ROLES.map((r) => (
+                    <span key={r} className="accent-italic h-[1.15em] leading-[1.15em]">
+                      {r}
+                    </span>
+                  ))}
+                </span>
+              </span>
+              Designer
             </p>
             <p className="mt-5 text-sm leading-relaxed text-ash sm:text-base">
               Graphics &amp; UI/UX Designer with 3+ years of experience creating meaningful visual
@@ -126,14 +145,14 @@ export function Hero() {
           </div>
 
           <div
-            className="mt-12 flex items-center gap-6 border-t border-ink/10 pt-6 transition-opacity duration-1000"
+            className="mt-12 flex items-center gap-6 border-t border-line pt-6 transition-opacity duration-1000"
             style={{ transitionDelay: "900ms", opacity: mounted ? 1 : 0 }}
           >
             <div>
-              <div className="font-display text-5xl leading-none text-ink sm:text-6xl">3+</div>
+              <div className="font-display text-5xl leading-none text-paper sm:text-6xl">3+</div>
               <div className="label-xs mt-2 text-ash">Years Experience</div>
             </div>
-            <div className="h-12 w-px bg-ink/10" />
+            <div className="h-12 w-px bg-line" />
             <div className="label-xs max-w-[16rem] leading-relaxed text-ash">
               Visual identity · Interfaces · Web &amp; Mobile · Marketing design
             </div>
@@ -152,8 +171,8 @@ export function Hero() {
               opacity: mounted ? 1 : 0,
             }}
           >
-            <div className="absolute -inset-x-4 bottom-6 top-10 border border-ink/15" />
-            <div className="absolute inset-x-8 bottom-0 top-24 bg-mist" />
+            <div className="glow-soft absolute -inset-x-4 bottom-6 top-10 rounded-[2rem] border border-line" />
+            <div className="absolute inset-x-8 bottom-0 top-24 rounded-[1.5rem] bg-gradient-to-b from-electric/25 to-neon/10 blur-[2px]" />
             <div className="pointer-events-none absolute -left-6 top-6 hidden lg:block">
               <span className="label-xs rotate-180 text-ash [writing-mode:vertical-rl]">
                 Personal Brand
@@ -164,7 +183,7 @@ export function Hero() {
               alt="Portrait of Shorif Ahamed Shakil, graphics and UI/UX designer"
               width={900}
               height={1200}
-              className="relative w-full select-none object-contain grayscale contrast-[1.15] drop-shadow-[0_28px_48px_rgba(0,0,0,0.28)]"
+              className="relative w-full select-none object-contain contrast-[1.08] drop-shadow-[0_28px_60px_rgba(0,0,0,0.75)]"
               style={{
                 clipPath: mounted ? "inset(0 0 0 0)" : "inset(0 0 100% 0)",
                 transition: "clip-path 1.4s cubic-bezier(0.16,1,0.3,1) 300ms",
@@ -176,7 +195,7 @@ export function Hero() {
 
       <button
         onClick={() => go("about")}
-        className="label-xs absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-2 text-ash hover:text-ink sm:flex"
+        className="label-xs absolute bottom-6 left-1/2 z-10 hidden -translate-x-1/2 items-center gap-2 text-ash hover:text-neon sm:flex"
       >
         Scroll to explore
         <ArrowDown size={14} className="scroll-hint" />
