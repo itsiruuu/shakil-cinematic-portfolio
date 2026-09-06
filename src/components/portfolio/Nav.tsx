@@ -13,16 +13,8 @@ const LINKS = [
 ];
 
 export function Nav() {
-  const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState("home");
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 40);
-    onScroll();
-    window.addEventListener("scroll", onScroll, { passive: true });
-    return () => window.removeEventListener("scroll", onScroll);
-  }, []);
 
   useEffect(() => {
     const sections = LINKS.map((l) => document.getElementById(l.id)).filter(
@@ -48,46 +40,36 @@ export function Nav() {
 
   return (
     <>
-      <header
-        className={cn(
-          "fixed inset-x-0 top-0 z-50 transition-all duration-500",
-          scrolled
-            ? "border-b border-ink/10 bg-paper/70 py-3 backdrop-blur-xl"
-            : "border-b border-transparent py-6",
-        )}
-      >
-        <div className="mx-auto flex max-w-[1500px] items-center gap-6 px-5 sm:px-8">
+      <header className="fixed inset-x-0 top-4 z-50 flex justify-center px-4 sm:top-6">
+        <div className="glass-card flex w-full max-w-[1100px] items-center gap-4 rounded-full px-4 py-2.5 shadow-[0_20px_60px_-30px_rgba(0,0,0,0.9)] sm:px-6">
           <button
             onClick={() => go("home")}
-            className="label-xs shrink-0 tracking-[0.32em] text-ink transition-opacity hover:opacity-60"
+            className="label-xs flex shrink-0 items-center gap-2 tracking-[0.32em] text-paper transition-opacity hover:opacity-70"
           >
-            SHORIF<span className="text-ash">.</span>
+            <span className="glow-ring inline-block h-2.5 w-2.5 rounded-full bg-neon" />
+            SHORIF
           </button>
 
-          <nav className="ml-auto hidden items-center gap-7 lg:flex">
+          <nav className="ml-auto hidden items-center gap-1 lg:flex">
             {LINKS.map((l) => (
               <button
                 key={l.id}
                 onClick={() => go(l.id)}
                 className={cn(
-                  "label-xs relative py-1 transition-colors",
-                  active === l.id ? "text-ink" : "text-ash hover:text-ink",
+                  "label-xs rounded-full px-3.5 py-2 transition-all duration-300",
+                  active === l.id
+                    ? "bg-paper/10 text-neon glow-ring"
+                    : "text-ash hover:text-paper",
                 )}
               >
                 {l.label}
-                <span
-                  className={cn(
-                    "absolute -bottom-0.5 left-0 h-px w-full origin-left bg-ink transition-transform duration-500",
-                    active === l.id ? "scale-x-100" : "scale-x-0",
-                  )}
-                />
               </button>
             ))}
           </nav>
 
           <button
             onClick={() => go("contact")}
-            className="label-xs ml-auto hidden overflow-hidden border border-ink px-5 py-3 text-ink transition-colors hover:bg-ink hover:text-paper lg:ml-0 lg:block"
+            className="label-xs ml-auto hidden rounded-full bg-gradient-to-r from-neon to-electric px-5 py-2.5 text-ink transition-all duration-500 hover:brightness-110 lg:ml-2 lg:block"
           >
             Let's Talk
           </button>
@@ -95,7 +77,7 @@ export function Nav() {
           <button
             aria-label="Open menu"
             onClick={() => setOpen(true)}
-            className="ml-auto border border-ink/20 p-2.5 text-ink lg:hidden"
+            className="ml-auto rounded-full border border-line p-2.5 text-paper lg:hidden"
           >
             <Menu size={18} />
           </button>
@@ -105,12 +87,12 @@ export function Nav() {
       {/* Mobile menu */}
       <div
         className={cn(
-          "fixed inset-0 z-[60] bg-ink text-paper transition-[opacity,transform] duration-500 lg:hidden",
+          "fixed inset-0 z-[60] bg-ink/95 text-paper backdrop-blur-xl transition-[opacity,transform] duration-500 lg:hidden",
           open ? "pointer-events-auto opacity-100" : "pointer-events-none opacity-0",
         )}
       >
         <div className="flex items-center justify-between px-5 py-6">
-          <span className="label-xs">Menu</span>
+          <span className="label-xs text-ash">Menu</span>
           <button aria-label="Close menu" onClick={() => setOpen(false)} className="p-2">
             <X size={20} />
           </button>
@@ -122,7 +104,7 @@ export function Nav() {
               onClick={() => go(l.id)}
               style={{ transitionDelay: `${open ? 80 + i * 45 : 0}ms` }}
               className={cn(
-                "display-lg border-b border-paper/15 py-4 text-left text-paper transition-all duration-500",
+                "display-lg border-b border-line py-4 text-left text-paper transition-all duration-500",
                 open ? "translate-y-0 opacity-100" : "translate-y-6 opacity-0",
               )}
             >
@@ -131,7 +113,7 @@ export function Nav() {
           ))}
           <button
             onClick={() => go("contact")}
-            className="label-xs mt-8 border border-paper px-6 py-4 text-paper"
+            className="label-xs mt-8 rounded-full bg-gradient-to-r from-neon to-electric px-6 py-4 text-ink"
           >
             Let's Talk
           </button>

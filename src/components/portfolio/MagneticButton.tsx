@@ -30,10 +30,12 @@ export function MagneticButton({
   };
 
   const styles = cn(
-    "label-xs group relative inline-flex items-center justify-center gap-3 px-8 py-4 transition-[transform,background-color,color] duration-500",
-    variant === "solid" && "bg-ink text-paper hover:bg-graphite",
-    variant === "outline" && "border border-ink text-ink hover:bg-ink hover:text-paper",
-    variant === "invert" && "bg-paper text-ink hover:bg-mist",
+    "label-xs group relative inline-flex items-center justify-center gap-3 rounded-full px-8 py-4 transition-[transform,background-color,color,box-shadow] duration-500",
+    variant === "solid" &&
+      "bg-gradient-to-r from-neon to-electric text-ink hover:glow-soft hover:brightness-110",
+    variant === "outline" &&
+      "border border-line bg-surface/60 text-paper backdrop-blur-md hover:border-neon hover:text-neon hover:glow-ring",
+    variant === "invert" && "bg-paper text-ink hover:bg-neon",
     className,
   );
 
