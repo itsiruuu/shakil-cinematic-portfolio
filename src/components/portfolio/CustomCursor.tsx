@@ -6,6 +6,7 @@ export function CustomCursor() {
   const reduced = usePrefersReducedMotion();
   const dotRef = useRef<HTMLDivElement | null>(null);
   const ringRef = useRef<HTMLDivElement | null>(null);
+  const trailRef = useRef<HTMLDivElement | null>(null);
   const [active, setActive] = useState(false);
 
   useEffect(() => {
@@ -16,6 +17,8 @@ export function CustomCursor() {
     let my = window.innerHeight / 2;
     let rx = mx;
     let ry = my;
+    let tx = mx;
+    let ty = my;
     let raf = 0;
 
     const onMove = (e: MouseEvent) => {
@@ -29,10 +32,15 @@ export function CustomCursor() {
     };
 
     const loop = () => {
-      rx += (mx - rx) * 0.14;
-      ry += (my - ry) * 0.14;
+      rx += (mx - rx) * 0.16;
+      ry += (my - ry) * 0.16;
+      tx += (rx - tx) * 0.1;
+      ty += (ry - ty) * 0.1;
       if (ringRef.current) {
         ringRef.current.style.transform = `translate3d(${rx}px, ${ry}px, 0) translate(-50%, -50%)`;
+      }
+      if (trailRef.current) {
+        trailRef.current.style.transform = `translate3d(${tx}px, ${ty}px, 0) translate(-50%, -50%)`;
       }
       raf = requestAnimationFrame(loop);
     };
@@ -49,24 +57,30 @@ export function CustomCursor() {
   if (!isDesktop || reduced) return null;
 
   return (
-    <div aria-hidden className="pointer-events-none fixed inset-0 z-[100] hidden lg:block">
+    <div aria-hidden className="pointer-events-none fixed inset-0 z-[130] hidden lg:block">
       <div
         ref={ringRef}
-        className="fixed left-0 top-0 rounded-full border border-ash/70 mix-blend-difference transition-[width,height,opacity] duration-300"
+        className="glow-ring fixed left-0 top-0 rounded-full border border-neon/70 transition-[width,height,opacity,background-color] duration-300"
         style={{
-          width: active ? 58 : 34,
-          height: active ? 58 : 34,
-          opacity: active ? 1 : 0.6,
-          borderColor: "#666666",
+          width: active ? 68 : 36,
+          height: active ? 68 : 36,
+          opacity: active ? 1 : 0.75,
+          backgroundColor: active ? "rgba(255,255,255,0.9)" : "transparent",
+          mixBlendMode: active ? "difference" : "normal",
         }}
       />
       <div
+        ref={trailRef}
+        className="fixed left-0 top-0 rounded-full bg-neon/40 blur-[6px]"
+        style={{ width: 14, height: 14, opacity: active ? 0 : 0.8 }}
+      />
+      <div
         ref={dotRef}
-        className="fixed left-0 top-0 rounded-full mix-blend-difference"
+        className="fixed left-0 top-0 rounded-full bg-neon"
         style={{
-          width: active ? 4 : 7,
-          height: active ? 4 : 7,
-          background: "#ffffff",
+          width: active ? 5 : 8,
+          height: active ? 5 : 8,
+          boxShadow: "0 0 14px 2px rgba(34,211,238,0.8)",
         }}
       />
     </div>
